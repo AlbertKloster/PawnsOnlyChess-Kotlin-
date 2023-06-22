@@ -36,6 +36,10 @@ class BoardHandler {
         return board.pawns.find { isAtCoordinate(it, position) }
     }
 
+    fun removePawn(pawn: Pawn): Boolean {
+        return board.pawns.remove(pawn)
+    }
+
     private fun isAtCoordinate(pawn: Pawn, position: Position): Boolean {
         return pawn.position.rank == position.rank && pawn.position.file == position.file
     }

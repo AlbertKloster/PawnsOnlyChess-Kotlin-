@@ -1,34 +1,42 @@
-# Stage 3/5: Moving forward
+# Stage 4/5: Capture
 ## Description
-There are several moves that a pawn can make — a forward move and a capture. In this stage, you need to implement forwards moves only. A forward move is a move that propels your pawn by one rank (horizontal line) if the square is not taken by another pawn, or by two ranks if this is the first move of the pawn:
+Let's add pawn captures. Capture is a move of a pawn when an opposite color pawn stands one square to the left or right on a diagonal. The attacking pawn takes the position of the captured pawn; the captured pawn is taken off the chessboard.
 
-![All possible forward moves of white pawns](whiteForwardMoves.png)
+![Possible moves of white pawns](whiteCapture.png)
 
-White's turn. All possible forward moves.
+White's turn. All possible captures.
 
-![All possible forward moves of black pawns](blackForwardMoves.png)
+![Possible moves of black pawns](blackCapture.png)
 
-Black's turn. All possible forward moves.
+Black's turn. All possible captures.
 
-If a user inputs an invalid or impossible move, warn them with a message and ask for another move.
+<b>En passant</b> is a special type of pawn capture. A white pawn is on the 5th rank. A black pawn is on the adjacent file (a vertical line); the black pawn (this should be its first move in the game) moves 2 squares forward, passing the white pawn. The white pawn can capture the black pawn by moving forward diagonally. The capture should be done right away, otherwise, the right to the en passant capture is lost:
+
+![Move sequence. White captures en passant](whiteEnPassant.png)
+
+Move sequence. White captures en passant.
+
+For Black, the situation is the direct opposite. A black pawn is on the 4th rank. A white pawn is on the adjacent file (a vertical line); the white pawn (this should be its first move in the game) moves 2 squares forward passing the black pawn. The black pawn can capture the white pawn by moving forward diagonally. The capture should be done right away, otherwise, the right to the en passant capture is lost:
+
+![Move sequence. Black captures en passant.](blackEnPassant.png)
+
+Move sequence. Black captures en passant.
+
+More on pawn captures can be found at <a href="https://www.chess.com/lessons/capturing-pieces">chess.com</a>
 
 ## Objectives
-When a player inputs a valid move, the program should move the pawn and print an updated chessboard (see Example 1).
-
-If a user inputs a move and there is no pawn at the initial square, or it is a pawn of the opposite color, print `No white pawn at <Start position>` or `No black pawn at <Start position>`, where `<Start position>` is the initial square and ask for another move.
-
-Print `Invalid Input` and ask to make another move if the player's move is invalid.
+The program should recognize all pawn captures and valid moves (once again, en passant captures are valid for <b>one move only</b>). If a player inputs a valid capture, then the program should move the capturing pawn forward and diagonally on the chessboard and remove the captured pawn from the chessboard. Don't forget to add the functionality from the previous stages.
 
 ## Examples
 The greater-than symbol followed by a space (`> `) represents the user input. Note that it's not part of the input.
 
-<b>Example 1:</b> <i>Correct moves</i>
+<b>Example 1:</b> <i>Valid captures</i>
 ```
 Pawns-Only Chess
 First Player's name:
 > Jane
 Second Player's name:
-> Peter
+> Mark
   +---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
@@ -43,48 +51,6 @@ Second Player's name:
 3 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
 2 | W | W | W | W | W | W | W | W |
-  +---+---+---+---+---+---+---+---+
-1 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-    a   b   c   d   e   f   g   h
-
-Jane's turn:
-> a2a3
-  +---+---+---+---+---+---+---+---+
-8 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-7 | B | B | B | B | B | B | B | B |
-  +---+---+---+---+---+---+---+---+
-6 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-5 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-4 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-3 | W |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-2 |   | W | W | W | W | W | W | W |
-  +---+---+---+---+---+---+---+---+
-1 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-    a   b   c   d   e   f   g   h
-
-Peter's turn:
-> b7b5
-  +---+---+---+---+---+---+---+---+
-8 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-7 | B |   | B | B | B | B | B | B |
-  +---+---+---+---+---+---+---+---+
-6 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-5 |   | B |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-4 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-3 | W |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-2 |   | W | W | W | W | W | W | W |
   +---+---+---+---+---+---+---+---+
 1 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
@@ -95,15 +61,99 @@ Jane's turn:
   +---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-7 | B |   | B | B | B | B | B | B |
+7 | B | B | B | B | B | B | B | B |
   +---+---+---+---+---+---+---+---+
 6 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-5 |   | B |   |   |   |   |   |   |
+5 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
 4 |   |   |   |   | W |   |   |   |
   +---+---+---+---+---+---+---+---+
-3 | W |   |   |   |   |   |   |   |
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Mark's turn:
+> d7d5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | B |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Jane's turn:
+> e4d5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | W |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Mark's turn:
+> c7c6
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B |   |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   | B |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | W |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Jane's turn:
+> a2a4
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B |   |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   | B |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | W |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 | W |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
 2 |   | W | W | W |   | W | W | W |
   +---+---+---+---+---+---+---+---+
@@ -111,18 +161,38 @@ Jane's turn:
   +---+---+---+---+---+---+---+---+
     a   b   c   d   e   f   g   h
 
-Peter's turn:
+Mark's turn:
+> c6d5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B |   |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | B |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 | W |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 |   | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Jane's turn:
 > exit
 Bye!
 ```
-
-<b>Example 2:</b> <i>Invalid moves</i>
+<b>Example 2:</b> <i>A successful en passant</i>
 ```
 Pawns-Only Chess
 First Player's name:
-> Jane
-Second Player's name:
 > Peter
+Second Player's name:
+> Anna
   +---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
@@ -142,14 +212,8 @@ Second Player's name:
   +---+---+---+---+---+---+---+---+
     a   b   c   d   e   f   g   h
 
-Jane's turn:
-> e2e5
-Invalid Input
-Jane's turn:
-> d3d4
-No white pawn at d3
-Jane's turn:
-> e2e3
+Peter's turn:
+> e2e4
   +---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
@@ -159,36 +223,9 @@ Jane's turn:
   +---+---+---+---+---+---+---+---+
 5 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-4 |   |   |   |   |   |   |   |   |
+4 |   |   |   |   | W |   |   |   |
   +---+---+---+---+---+---+---+---+
-3 |   |   |   |   | W |   |   |   |
-  +---+---+---+---+---+---+---+---+
-2 | W | W | W | W |   | W | W | W |
-  +---+---+---+---+---+---+---+---+
-1 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-    a   b   c   d   e   f   g   h
-
-Peter's turn:
-> a7a4
-Invalid Input
-Peter's turn:
-> d6d5
-No black pawn at d6
-Peter's turn:
-> b7b5
-  +---+---+---+---+---+---+---+---+
-8 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-7 | B |   | B | B | B | B | B | B |
-  +---+---+---+---+---+---+---+---+
-6 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-5 |   | B |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-4 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-3 |   |   |   |   | W |   |   |   |
+3 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
 2 | W | W | W | W |   | W | W | W |
   +---+---+---+---+---+---+---+---+
@@ -196,22 +233,16 @@ Peter's turn:
   +---+---+---+---+---+---+---+---+
     a   b   c   d   e   f   g   h
 
-Jane's turn:
-> e3e5
-Invalid Input
-Jane's turn:
-> e3d4
-Invalid Input
-Jane's turn:
-> e3e4
+Anna's turn:
+> a7a6
   +---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-7 | B |   | B | B | B | B | B | B |
+7 |   | B | B | B | B | B | B | B |
   +---+---+---+---+---+---+---+---+
-6 |   |   |   |   |   |   |   |   |
+6 | B |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-5 |   | B |   |   |   |   |   |   |
+5 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
 4 |   |   |   |   | W |   |   |   |
   +---+---+---+---+---+---+---+---+
@@ -224,23 +255,17 @@ Jane's turn:
     a   b   c   d   e   f   g   h
 
 Peter's turn:
-> b5b7
-Invalid Input
-Peter's turn:
-> b5a4
-Invalid Input
-Peter's turn:
-> b5b4
+> e4e5
   +---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-7 | B |   | B | B | B | B | B | B |
+7 |   | B | B | B | B | B | B | B |
   +---+---+---+---+---+---+---+---+
-6 |   |   |   |   |   |   |   |   |
+6 | B |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
-5 |   |   |   |   |   |   |   |   |
+5 |   |   |   |   | W |   |   |   |
   +---+---+---+---+---+---+---+---+
-4 |   | B |   |   | W |   |   |   |
+4 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
 3 |   |   |   |   |   |   |   |   |
   +---+---+---+---+---+---+---+---+
@@ -250,7 +275,209 @@ Peter's turn:
   +---+---+---+---+---+---+---+---+
     a   b   c   d   e   f   g   h
 
-Jane's turn:
+Anna's turn:
+> d7d5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 | B |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | B | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Peter's turn:
+> e5d6
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 | B |   |   | W |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Anna's turn:
+> exit
+Bye!
+```
+
+<b>Example 3:</b> <i>An en passant is missed</i>
+```
+Pawns-Only Chess
+First Player's name:
+> Peter
+Second Player's name:
+> Anna
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B | B | B | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W | W | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Peter's turn:
+> e2e4
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 | B | B | B | B | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Anna's turn:
+> a7a6
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B | B | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 | B |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Peter's turn:
+> e4e5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B | B | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 | B |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   |   | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Anna's turn:
+> d7d5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 | B |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | B | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 | W | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Peter's turn:
+> a2a3
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 | B |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 |   |   |   | B | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 | W |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 |   | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Anna's turn:
+> a6a5
+  +---+---+---+---+---+---+---+---+
+8 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+7 |   | B | B |   | B | B | B | B |
+  +---+---+---+---+---+---+---+---+
+6 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+5 | B |   |   | B | W |   |   |   |
+  +---+---+---+---+---+---+---+---+
+4 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+3 | W |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+2 |   | W | W | W |   | W | W | W |
+  +---+---+---+---+---+---+---+---+
+1 |   |   |   |   |   |   |   |   |
+  +---+---+---+---+---+---+---+---+
+    a   b   c   d   e   f   g   h
+
+Peter's turn:
+> e5d6
+Invalid Input
+Peter's turn:
 > exit
 Bye!
 ```
