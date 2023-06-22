@@ -1,12 +1,12 @@
 package chess
 
-class Engine {
+class BoardHandler {
     private val board = Board(mutableListOf())
 
     init {
         for (file in Files.values()) {
-            board.pawns.add(WhitePawn(Coordinate(file, Ranks.TWO)))
-            board.pawns.add(BlackPawn(Coordinate(file, Ranks.SEVEN)))
+            board.pawns.add(PawnWhite(Coordinate(file, Ranks.TWO)))
+            board.pawns.add(PawnBlack(Coordinate(file, Ranks.SEVEN)))
         }
     }
 
@@ -14,7 +14,7 @@ class Engine {
         val horizontalLine = "  +---+---+---+---+---+---+---+---+"
         val builder = StringBuilder(horizontalLine)
         for (rank in Ranks.values().reversed()) {
-            builder.append("\n${rank.number}")
+            builder.append("\n${rank.char}")
             for (file in Files.values()) {
                 val pawnByCoordinate = getPawnByCoordinate(Coordinate(file, rank))
                 builder.append(" | ")
@@ -23,7 +23,7 @@ class Engine {
             builder.append(" |\n")
             builder.append(horizontalLine)
         }
-        builder.append("\n    a   b   c   d   e   f   g   h")
+        builder.append("\n    a   b   c   d   e   f   g   h\n\n")
         print(builder)
 
     }

@@ -1,44 +1,68 @@
-# Stage 1/5: Chessboard
+# Stage 2/5: Game loop
 ## Description
-Chess has many variations. One of them is Pawns-only chess. It has only pawns. Not even a king. In this project, you create a two-player program for this chess variant.
+We need to make our program more interactive. First, it will ask players for their names. After that, the software will prompt each player to take turns and make a move. We are going to implement pawn moves later, so, for now, it doesn't matter which move is done at the current stage. However, the input should have the correct format. It should follow the `x0y1` format where `x0` is the coordinates of a pawn that the user wants to move, and `y1` are the coordinates of the final position. For example, at the current stage, the valid moves are `a2a4`, `d4d8`, `a1h8`, and so on. Moves like `j2j4`, `h0h4`, `a2a4a` are deemed to be invalid.
 
-In this stage, you need to print a chessboard made of characters as seen in the following picture:
-
-![Chessboard scheme](chessboard.png)
-
-The white pawns are denoted with the capital `W`, the black pawns are the capital `B` characters.
-
-A unique pair of coordinates (a letter and a number) identifies each square of the chessboard. From White's left to right, the squares in the vertical lines are called files. They are labeled from `a` to `h`. The horizontal lines, known as <b>ranks</b>, are numbered from `1` to `8`. These are legit coordinate pairs: `a2`, `c6`, `d8`, `h5`, and so on. This corresponds to the <a href="https://en.wikipedia.org/wiki/Algebraic_notation_(chess)">chess algebraic notation</a> for recording moves in chess.
-
-The Pawns-only chess has very simple rules. The pawns can make any <a href="https://en.wikipedia.org/wiki/Pawn_(chess)">standard pawn moves</a>, except promotion. A player wins the game when one of the pawns reaches the opponent's last row, or if all opponent pawns are captured. A draw occurs when one of the players is unable to make a valid move. This is called a stalemate.
-
-Use a <b>monospaced</b> font for the program output, to print the chessboard correctly. It is a font with fixed-width characters. By default, IntelliJ IDEA uses the monospaced font.
+If a player prompts an invalid move, the game should print a warning and ask for another move. Terminate the program after the `exit` command.
 
 ## Objectives
-Print the program name: `Pawns-Only Chess` and the text chessboard (see Example 1). Note the number of spaces.
+After `Pawns-Only Chess` is printed, prompt each player for their names with `First Player's name:` and `Second Player's name:` holders. After that, print the chessboard (see Example 1).
+
+The program should prompt each player for a move by printing `<first player name>'s turn:` or `<second player name>'s turn:` where `<first player name>` and `<second player name>` are the players' names. If the move follows the correct format, proceed to the next one. If the input doesn't follow the correct format, print `Invalid Input` and ask for another move (see Example 1).
+
+If a player inputs `exit`, terminate the program and print `Bye!`
 
 ## Examples
 The greater-than symbol followed by a space (`> `) represents the user input. Note that it's not part of the input.
 
 ### Example 1:
 ```
- Pawns-Only Chess
-  +---+---+---+---+---+---+---+---+
+Pawns-Only Chess
+First Player's name:
+> John
+Second Player's name:
+> Amelia
++---+---+---+---+---+---+---+---+
 8 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 7 | B | B | B | B | B | B | B | B |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 6 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 5 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 4 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 3 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 2 | W | W | W | W | W | W | W | W |
-  +---+---+---+---+---+---+---+---+
++---+---+---+---+---+---+---+---+
 1 |   |   |   |   |   |   |   |   |
-  +---+---+---+---+---+---+---+---+
-    a   b   c   d   e   f   g   h
++---+---+---+---+---+---+---+---+
+a   b   c   d   e   f   g   h
+
+John's turn:
+> a2a3
+Amelia's turn:
+> b7c4
+John's turn:
+> h8f2
+Amelia's turn:
+> b2b5
+John's turn:
+> s2s3
+Invalid Input
+John's turn:
+> d9b2
+Invalid Input
+John's turn:
+> s0f2
+Invalid Input
+John's turn:
+> a2a3b
+Invalid Input
+John's turn:
+> b2b3
+Amelia's turn:
+> exit
+Bye!
 ```

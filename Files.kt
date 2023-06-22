@@ -8,6 +8,17 @@ enum class Files(val char: Char) {
     E('e'),
     F('f'),
     G('g'),
-    H('h'),
+    H('h');
+
+    companion object {
+        fun getFile(char: Char): Files {
+            for (file in Files.values()) {
+                if (file.char == char) {
+                    return file
+                }
+            }
+            throw RuntimeException("Wrong character $char")
+        }
+    }
 
 }
