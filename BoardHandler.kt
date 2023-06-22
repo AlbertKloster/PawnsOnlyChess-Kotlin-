@@ -44,4 +44,12 @@ class BoardHandler {
         return pawn.position.rank == position.rank && pawn.position.file == position.file
     }
 
+    fun getAllWhitePawns(): List<Pawn> {
+        return board.pawns.filter { it.color == Colors.WHITE }
+    }
+
+    fun getAllBlackPawns(): List<Pawn> {
+        return board.pawns.filter { it.color == Colors.BLACK }
+    }
+
 }

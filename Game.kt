@@ -47,6 +47,22 @@ class Game {
                 currentPlayerIndex = (currentPlayerIndex + 1) % 2
                 boardHandler.printBoard()
                 moves.add(move)
+                when (getGameState(currentPlayer)) {
+                    GameStates.NOT_FINISHED -> {}
+                    GameStates.BLACK_WON -> {
+                        println("Black Wins!")
+                        exit = true
+                    }
+                    GameStates.WHITE_WON -> {
+                        println("White Wins!")
+                        exit = true
+                    }
+                    GameStates.STALEMATE -> {
+                        println("Stalemate!")
+                        exit = true
+                    }
+                }
+
 
             } catch (e: RuntimeException) {
                 if (e.message == "exit") {
@@ -93,7 +109,12 @@ class Game {
         }
 
         if (isEnPassantWhite(move)) {
-            return boardHandler.getPawnByPosition(Position(move.endPosition.file, Ranks.getRank(move.endPosition.rank.char - 1)))
+            return boardHandler.getPawnByPosition(
+                Position(
+                    move.endPosition.file,
+                    Ranks.getRank(move.endPosition.rank.char - 1)
+                )
+            )
         }
         return null
     }
@@ -104,7 +125,12 @@ class Game {
         }
 
         if (isEnPassantBlack(move)) {
-            return boardHandler.getPawnByPosition(Position(move.endPosition.file, Ranks.getRank(move.endPosition.rank.char + 1)))
+            return boardHandler.getPawnByPosition(
+                Position(
+                    move.endPosition.file,
+                    Ranks.getRank(move.endPosition.rank.char + 1)
+                )
+            )
         }
         return null
     }
@@ -150,12 +176,135 @@ class Game {
 
         if (moveRanks != 1 || moveFiles != 1) return false
 
-        val capturedPawnPosition = Position(move.endPosition.file, Ranks.getRank(if (opponentColor == Colors.BLACK) move.endPosition.rank.char - 1 else move.endPosition.rank.char + 1))
+        val capturedPawnPosition = Position(
+            move.endPosition.file,
+            Ranks.getRank(if (opponentColor == Colors.BLACK) move.endPosition.rank.char - 1 else move.endPosition.rank.char + 1)
+        )
 
         val capturedPawn = boardHandler.getPawnByPosition(capturedPawnPosition) ?: return false
 
 
         return capturedPawn.position.file == moves.last().endPosition.file && capturedPawn.position.rank == moves.last().endPosition.rank
+    }
+
+    private fun getGameState(currentPlayer: Player): GameStates {
+        return if (isWhiteWon()) GameStates.WHITE_WON
+        else if (isBlackWon()) GameStates.BLACK_WON
+        else if (isStalemate(currentPlayer)) GameStates.STALEMATE
+        else GameStates.NOT_FINISHED
+    }
+
+    private fun isWhiteWon() = isWhiteAtRankEight() || hasNoBlackPawns()
+
+    private fun isWhiteAtRankEight(): Boolean {
+        return boardHandler.getAllWhitePawns().any { it.position.rank == Ranks.EIGHT }
+    }
+
+    private fun hasNoBlackPawns(): Boolean {
+        return boardHandler.getAllBlackPawns().isEmpty()
+    }
+
+    private fun isBlackWon() = isBlackAtRankOne() || hasNoWhitePawns()
+
+    private fun isBlackAtRankOne(): Boolean {
+        return boardHandler.getAllBlackPawns().any { it.position.rank == Ranks.ONE }
+    }
+
+    private fun hasNoWhitePawns(): Boolean {
+        return boardHandler.getAllWhitePawns().isEmpty()
+    }
+
+    private fun isStalemate(currentPlayer: Player): Boolean {
+        val pawns =
+            if (currentPlayer.color == Colors.BLACK) boardHandler.getAllWhitePawns() else boardHandler.getAllBlackPawns()
+        var stalemate = true
+        for (pawn in pawns) {
+            stalemate = stalemate && !hasValidMove(pawn)
+        }
+        return stalemate
+    }
+
+    private fun hasValidMove(pawn: Pawn): Boolean {
+        return if (pawn.color == Colors.WHITE) hasValidMoveWhite(pawn)
+        else hasValidMoveBlack(pawn)
+    }
+
+    private fun hasValidMoveWhite(pawn: Pawn): Boolean {
+        if (pawn.position.rank == Ranks.EIGHT) return false
+
+        if (pawn.position.file != Files.H) {
+            if (isCaptureWhite(
+                    Move(
+                        pawn.position,
+                        Position(Files.getFile(pawn.position.file.char + 1), Ranks.getRank(pawn.position.rank.char + 1))
+                    )
+                )
+            ) {
+                return true
+            }
+        }
+
+        if (pawn.position.file != Files.A) {
+            if (isCaptureWhite(
+                    Move(
+                        pawn.position,
+                        Position(Files.getFile(pawn.position.file.char - 1), Ranks.getRank(pawn.position.rank.char + 1))
+                    )
+                )
+            ) {
+                return true
+            }
+        }
+
+        val move = Move(
+            pawn.position,
+            Position(pawn.position.file, Ranks.getRank(pawn.position.rank.char + 1))
+        )
+
+        if (!isNotValidMoveWhite(move)) {
+            return boardHandler.getPawnByPosition(move.endPosition) == null
+        }
+
+        return false
+    }
+
+    private fun hasValidMoveBlack(pawn: Pawn): Boolean {
+        if (pawn.position.rank == Ranks.ONE) return false
+
+        if (pawn.position.file != Files.H) {
+            if (isCaptureBlack(
+                    Move(
+                        pawn.position,
+                        Position(Files.getFile(pawn.position.file.char + 1), Ranks.getRank(pawn.position.rank.char - 1))
+                    )
+                )
+            ) {
+                return true
+            }
+        }
+
+        if (pawn.position.file != Files.A) {
+            if (isCaptureBlack(
+                    Move(
+                        pawn.position,
+                        Position(Files.getFile(pawn.position.file.char - 1), Ranks.getRank(pawn.position.rank.char - 1))
+                    )
+                )
+            ) {
+                return true
+            }
+        }
+
+        val move = Move(
+            pawn.position,
+            Position(pawn.position.file, Ranks.getRank(pawn.position.rank.char - 1))
+        )
+
+        if (!isNotValidMoveBlack(move)) {
+            return boardHandler.getPawnByPosition(move.endPosition) == null
+        }
+
+        return false
     }
 
 }
