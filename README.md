@@ -4,7 +4,7 @@ Chess has many variations. One of them is Pawns-only chess. It has only pawns. N
 
 In this stage, you need to print a chessboard made of characters as seen in the following picture:
 
-![Chessboard scheme](https://github.com/AlbertKloster/PawnsOnlyChess-Kotlin-/blob/Stage1/chessboard.png?raw=true)
+![Chessboard scheme](chessboard.png)
 
 The white pawns are denoted with the capital `W`, the black pawns are the capital `B` characters.
 
