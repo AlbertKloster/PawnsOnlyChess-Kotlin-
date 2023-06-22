@@ -1,3 +1,3 @@
 package chess
 
-open class Player(val name: String, val colors: Colors)
+open class Player(val name: String, val color: Colors)

@@ -1,3 +1,3 @@
 package chess
 
-open class Pawn(val color: Colors, var coordinate: Coordinate)
+open class Pawn(val color: Colors, var position: Position)

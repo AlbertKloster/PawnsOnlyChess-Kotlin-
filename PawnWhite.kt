@@ -1,3 +1,3 @@
 package chess
 
-class PawnWhite(coordinate: Coordinate): Pawn(Colors.WHITE, coordinate)
+class PawnWhite(position: Position): Pawn(Colors.WHITE, position)

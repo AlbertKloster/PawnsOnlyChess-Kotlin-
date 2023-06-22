@@ -10,6 +10,6 @@ class Input {
         if (!input.matches(regex)) {
             throw RuntimeException("Invalid Input")
         }
-        return Move(Coordinate(Files.getFile(input[0]), Ranks.getRank(input[1])), Coordinate(Files.getFile(input[2]), Ranks.getRank(input[3])))
+        return Move(Position(Files.getFile(input[0]), Ranks.getRank(input[1])), Position(Files.getFile(input[2]), Ranks.getRank(input[3])))
     }
 }

@@ -1,3 +1,3 @@
 package chess
 
-class Move(val startCoordinate: Coordinate, val endCoordinate: Coordinate)
+class Move(val startPosition: Position, val endPosition: Position)

@@ -21,8 +21,26 @@ class Game {
         while (!exit) {
             println("${players[currentPlayerIndex].name}'s turn:")
             try {
-                input.getMove()
+                val move = input.getMove()
+
+                val pawnAtStartPosition =
+                    boardHandler.getPawnByColorAndPosition(players[currentPlayerIndex].color, move.startPosition)
+                        ?: throw RuntimeException("No ${players[currentPlayerIndex].color.name.lowercase()} pawn at ${move.startPosition.file.char}${move.startPosition.rank.char}")
+
+                val pawnAtEndPosition =
+                    boardHandler.getPawnByPosition(move.endPosition)
+
+                if (pawnAtEndPosition != null) {
+                    throw RuntimeException("Invalid Input")
+                }
+
+                if (isNotValidMove(players[currentPlayerIndex], move)) {
+                    throw RuntimeException("Invalid Input")
+                }
+
+                pawnAtStartPosition.position = move.endPosition
                 currentPlayerIndex = (currentPlayerIndex + 1) % 2
+                boardHandler.printBoard()
             } catch (e: RuntimeException) {
                 if (e.message == "exit") {
                     exit = true
@@ -32,6 +50,27 @@ class Game {
             }
         }
         println("Bye!")
+    }
+
+    private fun isNotValidMove(player: Player, move: Move): Boolean {
+        return when(player.color) {
+            Colors.WHITE -> isNotValidWhiteMove(move)
+            Colors.BLACK -> isNotValidBlackMove(move)
+        }
+    }
+
+    private fun isNotValidWhiteMove(move: Move): Boolean {
+        if (move.startPosition.file != move.endPosition.file) return true
+        val moveRanks = move.endPosition.rank.char - move.startPosition.rank.char
+        if (moveRanks < 1 || moveRanks > 2) return true
+        return moveRanks == 2 && move.startPosition.rank != Ranks.TWO
+    }
+
+    private fun isNotValidBlackMove(move: Move): Boolean {
+        if (move.startPosition.file != move.endPosition.file) return true
+        val moveRanks = move.startPosition.rank.char - move.endPosition.rank.char
+        if (moveRanks < 1 || moveRanks > 2) return true
+        return moveRanks == 2 && move.startPosition.rank != Ranks.SEVEN
     }
 
 }

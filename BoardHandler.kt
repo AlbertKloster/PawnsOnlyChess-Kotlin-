@@ -5,8 +5,8 @@ class BoardHandler {
 
     init {
         for (file in Files.values()) {
-            board.pawns.add(PawnWhite(Coordinate(file, Ranks.TWO)))
-            board.pawns.add(PawnBlack(Coordinate(file, Ranks.SEVEN)))
+            board.pawns.add(PawnWhite(Position(file, Ranks.TWO)))
+            board.pawns.add(PawnBlack(Position(file, Ranks.SEVEN)))
         }
     }
 
@@ -16,9 +16,9 @@ class BoardHandler {
         for (rank in Ranks.values().reversed()) {
             builder.append("\n${rank.char}")
             for (file in Files.values()) {
-                val pawnByCoordinate = getPawnByCoordinate(Coordinate(file, rank))
+                val pawnByPosition = getPawnByPosition(Position(file, rank))
                 builder.append(" | ")
-                builder.append(pawnByCoordinate?.color?.char ?: ' ')
+                builder.append(pawnByPosition?.color?.char ?: ' ')
             }
             builder.append(" |\n")
             builder.append(horizontalLine)
@@ -28,12 +28,16 @@ class BoardHandler {
 
     }
 
-    private fun getPawnByCoordinate(coordinate: Coordinate): Pawn? {
-        return board.pawns.find { isAtCoordinate(it, coordinate) }
+    fun getPawnByColorAndPosition(color: Colors, position: Position): Pawn? {
+        return board.pawns.filter { it.color == color }.find { isAtCoordinate(it, position) }
     }
 
-    private fun isAtCoordinate(pawn: Pawn, coordinate: Coordinate): Boolean {
-        return pawn.coordinate.rank == coordinate.rank && pawn.coordinate.file == coordinate.file
+    fun getPawnByPosition(position: Position): Pawn? {
+        return board.pawns.find { isAtCoordinate(it, position) }
+    }
+
+    private fun isAtCoordinate(pawn: Pawn, position: Position): Boolean {
+        return pawn.position.rank == position.rank && pawn.position.file == position.file
     }
 
 }
