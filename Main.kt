@@ -1,5 +1,7 @@
 package chess
 
 fun main() {
-//    write your code here
+    val engine = Engine()
+    println("Pawns-Only Chess")
+    engine.printBoard()
 }
